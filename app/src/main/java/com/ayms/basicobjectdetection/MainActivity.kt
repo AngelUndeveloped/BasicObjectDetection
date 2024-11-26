@@ -38,99 +38,32 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BasicObjectDetectionTheme {
-                val selectedImageUri = remember {
-                    mutableStateOf<Uri?>(null)
-                }
 
-                val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
-                    contract = PickVisualMedia(),
-                    onResult = { uri ->
-                        if (uri != null) {
-                            Log.d("PhotoPicker", "Selected URI: $uri")
-                        } else {
-                            Log.d("PhotoPicker", "No media selected")
-                        }
-                    }
-                )
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    CombinedTitleAndDetectionTypeSelection(singlePhotoPickerLauncher)
-                    item {
-                        AsyncImage(
-                            model = selectedImageUri,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
             }
         }
     }
 }
 
 @Composable
-fun Title(title: String, modifier: Modifier = Modifier) {
-    Text(
-        text = title,
-        modifier = modifier
-    )
-}
-
-@Composable
-fun DetectionTypeSelection(
-    liveDetectionButtonText: String,
-    photoDetectionButtonText: String,
-    singlePhotoPickerLauncher: ActivityResultLauncher<PickVisualMediaRequest>
-) {
-    Column {
+fun DetectionModeSelector() {
+    Column(modifier =
+    Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally) {
         ElevatedButton(onClick = { /*TODO*/ }) {
-            Text(liveDetectionButtonText)
+            Text(text = "Live Detection")
         }
-        ElevatedButton(onClick = {
-            singlePhotoPickerLauncher.launch(
-                PickVisualMediaRequest(ImageOnly)
-            )
-        }) {
-            Text(photoDetectionButtonText)
+        Spacer(modifier = Modifier.height(10.dp))
+        ElevatedButton(onClick = { /*TODO*/ }) {
+            Text(text = "Image Detection")
         }
     }
 }
 
-/**
- * Composable that displays the title and the detection type selection buttons.
- */
+@Preview(showBackground = true)
 @Composable
-fun CombinedTitleAndDetectionTypeSelection(
-    singlePhotoPickerLauncher: ActivityResultLauncher<PickVisualMediaRequest>
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Title(title = "Object detection!")
-        Spacer(modifier = Modifier.height(16.dp))
-        DetectionTypeSelection(
-            liveDetectionButtonText = "Live Detection",
-            photoDetectionButtonText = "Photo Detection",
-            singlePhotoPickerLauncher = singlePhotoPickerLauncher
-        )
+fun TitlePreview() {
+    BasicObjectDetectionTheme {
+        DetectionModeSelector()
     }
 }
-
-fun item(function: @Composable () -> Unit) {
-
-}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun TitlePreview() {
-//    BasicObjectDetectionTheme {
-//        CombinedTitleAndDetectionTypeSelection(
-//            singlePhotoPickerLauncher =
-//        )
-//    }
-//}
